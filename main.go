@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/datastore"
+	"github.com/yagi5/hist-datastore/cache"
+	histds "github.com/yagi5/hist-datastore/datastore"
 )
 
 const (
