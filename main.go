@@ -54,5 +54,12 @@ func main() {
 			log.Printf("Failed to get from cache: %v", err)
 		}
 	}
+	if len(hists) <= 10 {
+		allHists, err := cache.GetAll()
+		if err != nil {
+			log.Printf("Failed to get from cache: %v", err)
+		}
+		hists = append(hists, allHists...)
+	}
 	hists.Print()
 }

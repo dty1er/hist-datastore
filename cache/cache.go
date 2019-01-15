@@ -53,3 +53,21 @@ func Get(pwd string) (hists datastore.Histories, err error) {
 	}
 	return
 }
+
+// GetAll ...
+func GetAll() (hists datastore.Histories, err error) {
+	cache := getCacheFileName()
+	f, err := os.Open(cache)
+	if err != nil {
+		return
+	}
+
+	gt := gtsv.New(f)
+	for gt.Next() {
+		cpwd := gt.String()
+		ccommand := gt.String()
+		_ = gt.String() // timestamp is not needed
+		hists = append(hists, &datastore.History{Command: ccommand, Pwd: cpwd})
+	}
+	return
+}
