@@ -38,7 +38,7 @@ func (hs Histories) Print() {
 
 // Get ...
 func (cl *Client) Get(ctx context.Context, pwd string) (hists Histories, err error) {
-	query := datastore.NewQuery("History").Filter("Pwd = ", pwd).Limit(100)
+	query := datastore.NewQuery("History").Filter("Pwd = ", pwd).Order("-Timestamp").Limit(100)
 	_, err = cl.Cl.GetAll(ctx, query, &hists)
 	if err != nil {
 		return
