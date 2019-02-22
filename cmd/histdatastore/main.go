@@ -46,13 +46,9 @@ func main() {
 
 	// Get
 	pwd := os.Args[2]
-	hists, err := cl.Get(ctx, pwd)
+	hists, err := cache.Get(pwd)
 	if err != nil {
-		log.Printf("Failed to get history: %v", err)
-		hists, err = cache.Get(pwd)
-		if err != nil {
-			log.Printf("Failed to get from cache: %v", err)
-		}
+		log.Printf("Failed to get from cache: %v", err)
 	}
 	if len(hists) <= 10 {
 		allHists, err := cache.GetAll()

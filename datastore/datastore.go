@@ -2,25 +2,16 @@ package datastore
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"cloud.google.com/go/datastore"
+	"github.com/yagi5/hist-datastore/entity"
 )
-
-// History represents the kind of Datastore
-type History struct {
-	Pwd       string
-	Command   string
-	Timestamp time.Time
-}
-
-// Histories ...
-type Histories []*History
 
 // DataStore ...
 type DataStore interface {
 	Get(ctx context.Context, pwd string)
+	GetAll(ctx context.Context)
 	Put(ctx context.Context, pwd, cmd string)
 }
 
@@ -29,24 +20,9 @@ type Client struct {
 	Cl *datastore.Client
 }
 
-// Print ...
-func (hs Histories) Print() {
-	var uhs []*History
-	m := make(map[string]bool)
-	for _, h := range hs {
-		if !m[h.Command] {
-			m[h.Command] = true
-			uhs = append(uhs, h)
-		}
-	}
-	for _, h := range uhs {
-		fmt.Println(h.Command)
-	}
-}
-
-// Get ...
-func (cl *Client) Get(ctx context.Context, pwd string) (hists Histories, err error) {
-	query := datastore.NewQuery("History").Filter("Pwd = ", pwd).Order("-Timestamp").Limit(5000)
+// Get gets records
+func (cl *Client) Get(ctx context.Context, pwd string) (hists entity.Histories, err error) {
+	query := datastore.NewQuery("History").DistinctOn("Command").Filter("Pwd = ", pwd).Order("-Timestamp").Limit(5000)
 	_, err = cl.Cl.GetAll(ctx, query, &hists)
 	if err != nil {
 		return
@@ -54,10 +30,20 @@ func (cl *Client) Get(ctx context.Context, pwd string) (hists Histories, err err
 	return
 }
 
-// Put ...
+// GetAll gets records
+func (cl *Client) GetAll(ctx context.Context) (hists entity.Histories, err error) {
+	query := datastore.NewQuery("History").DistinctOn("Pwd", "Command").Order("-Timestamp").Limit(20000)
+	_, err = cl.Cl.GetAll(ctx, query, &hists)
+	if err != nil {
+		return
+	}
+	return
+}
+
+// Put puts records
 func (cl *Client) Put(ctx context.Context, pwd, cmd string) error {
 	key := datastore.IncompleteKey("History", nil)
-	hist := &History{Pwd: pwd, Timestamp: time.Now(), Command: cmd}
+	hist := &entity.History{Pwd: pwd, Timestamp: time.Now(), Command: cmd}
 	if _, err := cl.Cl.Put(ctx, key, hist); err != nil {
 		return err
 	}
