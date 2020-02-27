@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/yagi5/gtsv"
-	"github.com/yagi5/hist-datastore/entity"
+	"github.com/dty1er/gtsv"
+	"github.com/dty1er/hist-datastore/entity"
 )
 
 // Cache ...
