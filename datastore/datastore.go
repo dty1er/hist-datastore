@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/datastore"
-	"github.com/yagi5/hist-datastore/entity"
+	"github.com/dty1er/hist-datastore/entity"
 )
 
 // DataStore ...
