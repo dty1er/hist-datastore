@@ -20,16 +20,6 @@ type Client struct {
 	Cl *datastore.Client
 }
 
-// Get gets records
-func (cl *Client) Get(ctx context.Context, pwd string) (hists entity.Histories, err error) {
-	query := datastore.NewQuery("History").DistinctOn("Command").Filter("Pwd = ", pwd).Order("-Timestamp").Limit(5000)
-	_, err = cl.Cl.GetAll(ctx, query, &hists)
-	if err != nil {
-		return
-	}
-	return
-}
-
 // GetAll gets records
 func (cl *Client) GetAll(ctx context.Context) (hists entity.Histories, err error) {
 	query := datastore.NewQuery("History").DistinctOn("Pwd", "Command").Order("-Timestamp").Limit(20000)
