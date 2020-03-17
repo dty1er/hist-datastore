@@ -6,51 +6,38 @@ import (
 	"os"
 	"strings"
 
-	"cloud.google.com/go/datastore"
 	"github.com/dty1er/hist-datastore/cache"
-	histds "github.com/dty1er/hist-datastore/datastore"
-)
-
-const (
-	projectID = "hist-datastore"
+	"github.com/dty1er/hist-datastore/dynamodb"
+	"github.com/dty1er/hist-datastore/store"
 )
 
 func main() {
-	crd := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
-	if crd == "" {
-		log.Fatalf("gcp credential missing. set $GOOGLE_APPLICATION_CREDENTIALS")
+	store := dynamodb.New()
+	// store := datastore.New()
+
+	switch os.Args[1] {
+	case "put":
+		Put(store, os.Args[2], os.Args[3:])
+	case "get":
+		Get(os.Args[2])
 	}
+}
+
+func Put(store store.Store, dir string, cmd []string) {
 	ctx := context.Background()
-
-	c, err := datastore.NewClient(ctx, projectID)
-	if err != nil {
-		log.Fatalf("Failed to create client: %v", err)
-	}
-	cl := &histds.Client{Cl: c}
-
-	op := os.Args[1]
-
-	if op != "put" && op != "get" {
-		log.Fatalf("specify get or put")
+	if err := store.Put(ctx, dir, strings.Join(cmd, " ")); err != nil {
+		log.Fatalf("Failed to save history: %v", err)
 	}
 
-	// Put
-	if op == "put" {
-		pwd, cmd := os.Args[2], os.Args[3:]
-		if err := cl.Put(ctx, pwd, strings.Join(cmd, " ")); err != nil {
-			log.Fatalf("Failed to save history: %v", err)
-		}
-		cache.Put(ctx, pwd, strings.Join(cmd, " "))
-		return
-	}
+	cache.Put(ctx, dir, strings.Join(cmd, " "))
+}
 
-	// Get
-	pwd := os.Args[2]
-	hists, err := cache.Get(pwd)
+func Get(dir string) {
+	hists, err := cache.Get(dir)
 	if err != nil {
 		log.Printf("Failed to get from cache: %v", err)
 	}
-	if len(hists) <= 10 {
+	if len(hists) <= 30 {
 		allHists, err := cache.GetAll()
 		if err != nil {
 			log.Printf("Failed to get from cache: %v", err)

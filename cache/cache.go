@@ -10,12 +10,6 @@ import (
 	"github.com/dty1er/hist-datastore/entity"
 )
 
-// Cache ...
-type Cache interface {
-	Get(pwd string)
-	GetAll()
-}
-
 func getCacheDir() string {
 	cache := fmt.Sprintf("%s/.cache/", os.Getenv("HOME"))
 

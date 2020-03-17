@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// History represents the kind of Datastore
+// History represents the data of history
 type History struct {
 	Pwd       string
 	Command   string
