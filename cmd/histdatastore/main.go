@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+	// TODO: use flag.Parse and enable to specify database
 	store := dynamodb.New()
 	// store := datastore.New()
 
