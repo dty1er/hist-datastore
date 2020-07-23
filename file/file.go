@@ -22,7 +22,7 @@ func New() *File {
 	if xdgCacheHome != "" {
 		cache = fmt.Sprintf("%s/", xdgCacheHome)
 	}
-	return &File{path: filepath.Join(cache, "hist")}
+	return &File{path: filepath.Join(cache, "hist.tsv")}
 }
 
 func (f *File) Get(ctx context.Context, pwd string) ([]*entity.History, error) {

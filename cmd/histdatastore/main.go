@@ -45,7 +45,8 @@ func Get(store store.Store, dir string) {
 			uhs = append(uhs, h)
 		}
 	}
-	for _, h := range uhs {
-		fmt.Println(h.Command)
+
+	for i := len(uhs) - 1; i >= 0; i-- {
+		fmt.Println(uhs[i].Command)
 	}
 }
