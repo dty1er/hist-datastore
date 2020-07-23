@@ -9,6 +9,6 @@ import (
 // Store is an interface to access to database
 // storing history data
 type Store interface {
-	GetAll(ctx context.Context) (entity.Histories, error)
+	Get(ctx context.Context, pwd string) ([]*entity.History, error)
 	Put(ctx context.Context, pwd, cmd string) error
 }

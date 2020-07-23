@@ -15,7 +15,7 @@ func New() *DynamoDB {
 	panic("implement me")
 }
 
-func (d *DynamoDB) GetAll(ctx context.Context) (hists entity.Histories, err error) {
+func (d *DynamoDB) Get(ctx context.Context, pwd string) ([]*entity.History, error) {
 	panic("implement me")
 }
 
