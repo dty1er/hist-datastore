@@ -7,7 +7,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/dty1er/hist-datastore/entity"
 	"github.com/dty1er/hist-datastore/file"
 	"github.com/dty1er/hist-datastore/store"
 )
@@ -37,16 +36,12 @@ func Get(store store.Store, dir string) {
 		log.Fatalf("Failed to get histories: %v", err)
 	}
 
-	var uhs []*entity.History
 	m := make(map[string]bool)
-	for _, h := range hists {
+	for i := len(hists) - 1; i >= 0; i-- {
+		h := hists[i]
 		if !m[h.Command] {
 			m[h.Command] = true
-			uhs = append(uhs, h)
+			fmt.Println(h.Command)
 		}
-	}
-
-	for i := len(uhs) - 1; i >= 0; i-- {
-		fmt.Println(uhs[i].Command)
 	}
 }
